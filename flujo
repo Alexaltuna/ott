@@ -1,0 +1,13 @@
+theme sketchtitle OTT Onboardingbegin Flow Front, Back, OTT, CRM/Billing, Flow Platform, OTT Activation PortalFlow Front -> +Back: "GetOffer(customerId)" note over Back: "Generate offer based oncustomer products and history"Flow Front <-- -Back: "200 OK {offer}"Flow Front -> +Back: "BuyProduct(customerId,offer)" note over Back: "Check if offer is valid for this customer" Back -> +CRM/Billing: "Charge/Subscribe(customerId,offer)"
+CRM/Billing -> +Flow Platform: "Add OTT Package"
+CRM/Billing <-- -Flow Platform: "200 OK"
+Back <-- -CRM/Billing: "200 OK" Back -> +OTT: "Subscribe(customerId,offer)"
+Back <-- -OTT: "200 OK" note over Back: "RegisterSubscription(customerId,offer)" note over Back: "GenerateToken(customerId)"Flow Front <-- -Back: "200 OK {redirect URL with token}"Back -> +Flow Front: "Mail: congrats! You have bought the OTT product.
+Now you have to activate your product following this link"Flow Front -> +OTT Activation Portal: "redirect (HTTP GET with token)"note over Flow Front: "Now the user will be redirected to OTT activation portal.
+If something goes wrong or the user do not activate at this time,
+she/he could use the Mail sent to get to the activation portal.
+We don't send the actual redirect URL with the token but a link to a Flow URL
+that re-generates a new token and redirect URL, and redirects the user."note over OTT Activation Portal: "Portal ask user to generate credentials.
+Portal asociates this credentials to customer subscription
+(customerId is one of the token claims)"OTT Activation Portal -> +Back: "ActivationNotification(customerId)"
+OTT Activation Portal <-- -Back: "200 OK"terminators box
